@@ -15,18 +15,63 @@ const slides = [
 		"image":"slide4.png",
 		"tagLine":"Autocollants <span>avec découpe laser sur mesure</span>"
 	}
+	
 ]
 
-
+// Déclaration des variables et constantes
 // flèches de navigation 
 const leftArrow = document.getElementById('arrow_Left');
 const rightArrow = document.getElementById('arrow_Right');
-
+// Sélection du conteneur des dots
+const dotsContainer = document.getElementById('dotsContainer');
 // Définit la valeur par defaut du "currentSlideIndex"
 let currentSlideIndex = 0;
-
 // Définit la valeur de "totalSlides" pour quelle soit égale au nombre d'élements dans le tableau
 const totalSlides = slides.length;
+
+
+
+// Fonction pour créer les dots
+function createDots() {
+	// Boucle pour faire en sorte que tant que i est inférieur au nombre total de slides, on incrémente de 1
+    for (let i = 0; i < totalSlides; i++) {
+		// Crée un nouvel élément div avec la classe 'dot'
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+		// Ajoute un écouteur d'événements 'click' au dot
+        dot.addEventListener('click', function() {
+            // Pour mettre à jour la slide lorsqu'un dot est cliqué
+            currentSlideIndex = i;
+			// update de "currentSlideIndex"
+            updateSlide(currentSlideIndex);
+        });
+		// Ajoute le dot au conteneur 'dotsContainer'
+        dotsContainer.appendChild(dot);
+    }
+}
+
+// Mettre à jour les dots actifs
+function updateDots() {
+    const allDots = document.querySelectorAll('.dot');
+    allDots.forEach(dot => dot.classList.remove('active'));
+    allDots[currentSlideIndex].classList.add('active');
+}
+
+// Mettez à jour les dots chaque fois que vous mettez à jour la slide
+function updateSlide(index) {
+    const slideImage = document.getElementById('slide');
+    const tagLine = document.getElementById('tagLine');
+    slideImage.src = './assets/images/slideshow/' + slides[index].image;
+    tagLine.innerHTML = slides[index].tagLine;
+    updateDots(); // Appelez la fonction pour mettre à jour les dots actifs
+}
+
+// Initialisation de la slide active et du dot actif au chargement de la page
+window.addEventListener('load', function() {
+    createDots(); // Appel de la fonction pour créer les dots
+    updateSlide(currentSlideIndex); // Met à jour la slide active
+    updateDots(); // Met à jour le dot actif
+});
 
 // Définit l'action des flèches 
 leftArrow.addEventListener('click', function() {
@@ -38,8 +83,6 @@ leftArrow.addEventListener('click', function() {
     }
 	// update de "currentSlideIndex"
     updateSlide(currentSlideIndex);
-	// Pour vérifier si tout va bien et pour différencier les cliques gauche ou droite
-	console.log('Flèche gauche cliquée. Nouvel index de la diapositive :', currentSlideIndex);
 });
 
 
@@ -52,25 +95,11 @@ rightArrow.addEventListener('click', function() {
     }
 	// update de "currentSlideIndex"
     updateSlide(currentSlideIndex);
-	// Pour vérifier si tout va bien et pour différencier les cliques gauche ou droite
-	console.log('Flèche droite cliquée. Nouvel index de la diapositive :', currentSlideIndex);
 });
 
 
 
-// Pour mettre à jour l'image et le tagline en fonction du numéro de l'index
-function updateSlide(index) {
-	// Element qui doivent être mis a jour
-    const slideImage = document.getElementById('slide');
-    const tagLine = document.getElementById('tagLine');
-    slideImage.src = './assets/images/slideshow/' + slides[index].image;
-    tagLine.innerHTML = slides[index].tagLine;
 
-	// Mettre à jour les dots
-	// Pour selectionner tous les dot
-    const dots = document.querySelectorAll('.dot');
-	// Pour retirer la fonction "active" de tous les dot
-    dots.forEach(dot => dot.classList.remove('active'));
-	// Pour activer seulement le dot de l'index en cours
-    dots[index].classList.add('active');
-}
+
+
+
